@@ -11,8 +11,12 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.5",
+    "@openfonts/space-mono_all": "^1.44.0",
     "electron-serve": "^0.4.1",
-    "electron-store": "^5.1.0"
+    "electron-store": "^5.1.0",
+    "moment": "^2.24.0",
+    "typeface-roboto": "0.0.75"
   },
   "devDependencies": {
     "electron": "^7.1.9",
