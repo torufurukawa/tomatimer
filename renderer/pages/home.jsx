@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core'
 import { Grid as MuiGrid } from '@material-ui/core'
 import moment from 'moment'
+import config from './config.js'
 
 
 class Page extends React.Component {
@@ -12,7 +13,7 @@ class Page extends React.Component {
       'work': {
         name: 'work',
         title: 'Work',
-        duration: moment.duration('00:25:00'),
+        duration: config.workDuration,
         message: 'Stop working, take a break',
         color: 'primary'
       },
@@ -29,7 +30,7 @@ class Page extends React.Component {
   constructor(prop) {
     super(prop)
     const initialTimerSpec = this.timerSpecs.work
-    this.state = {
+     this.state = {
       timerSpec: initialTimerSpec,
       isRunning: false,
       until: null,
