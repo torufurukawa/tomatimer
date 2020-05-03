@@ -8,18 +8,19 @@ const DURATION = 3 * 1000
 export default class Page extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { timerIs: 'stopped', willStopAt: null }
+    this.state = {
+      timerIs: 'stopped',
+      willStopAt: null,
+      remaining: moment.duration(DURATION)
+    }
     this.onStart = this.onStart.bind(this)
+    this.onPause = this.onPause.bind(this)
     this.tick = this.tick.bind(this)
-    this.notify = this.notify.bind(this)
   }
 
   render() {
-    const disabled = this.state.timerIs != 'stopped'
-    let remaining = moment.duration(0)
-    if (this.state.willStopAt) {
-      remaining = this.state.willStopAt.clone().subtract(moment())
-    }
+    const startable = this.state.timerIs != 'running'
+    const pausable = this.state.timerIs == 'running'
 
     return (
       <div className="container">
@@ -30,14 +31,20 @@ export default class Page extends React.Component {
         <Container fluid style={{ marginTop: '1rem' }}>
           <Row>
             <Col>
-              <DurationClock duration={remaining} />
+              <DurationClock duration={this.state.remaining} />
             </Col>
           </Row>
           <Row>
             <Col>
-              <Button variant="primary" disabled={disabled}
-                onClick={this.onStart} >
+              <Button variant="primary" disabled={!startable}
+                onClick={this.onStart}>
                 Start
+              </Button>
+            </Col>
+            <Col>
+              <Button variant="secondary" disabled={!pausable}
+                onClick={this.onPause}>
+                Pause
               </Button>
             </Col>
           </Row>
@@ -53,19 +60,26 @@ export default class Page extends React.Component {
 
   tick() {
     if (this.state.timerIs == 'running') {
-      if (moment().isSameOrAfter(this.state.willStopAt)) {
-        this.setState(
-          { timerIs: 'stopped', willStopAt: null },
-          () => { this.notify() }
-        )
+      const timeLimit = this.state.willStopAt.clone()
+      const now = moment()
+      const remaining = moment.duration(timeLimit.subtract(now).min(0))
+      const state = { remaining: remaining }
+      if (remaining.as('seconds') == 0) {
+        state.timerIs = 'stopped'
+        state.willStopAt = null
+        this.notify()
       }
-      this.forceUpdate()
+      this.setState(state)
     }
   }
 
   onStart() {
     const willStopAt = moment().add(moment.duration(DURATION))
-    this.setState({ timerIs: 'running', willStopAt: willStopAt.clone() })
+    this.setState({ timerIs: 'running', willStopAt: willStopAt })
+  }
+
+  onPause() {
+    this.setState({ timerIs: 'paused' })
   }
 
   notify() {
