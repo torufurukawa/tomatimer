@@ -11,6 +11,23 @@ export default class Page extends React.Component {
     this.state = { timerIs: 'stopped', willStopAt: null }
     this.onStart = this.onStart.bind(this)
     this.tick = this.tick.bind(this)
+    this.notify = this.notify.bind(this)
+  }
+
+  componentDidMount() {
+    Notification.requestPermission()
+    setInterval(this.tick, 500)
+  }
+
+  tick() {
+    if (this.state.timerIs == 'running') {
+      if (moment().isSameOrAfter(this.state.willStopAt)) {
+        this.setState(
+          { timerIs: 'stopped', willStopAt: null },
+          () => { this.notify() }
+        )
+      }
+    }
   }
 
   render() {
@@ -37,15 +54,7 @@ export default class Page extends React.Component {
     this.setState({ timerIs: 'running', willStopAt: willStopAt })
   }
 
-  componentDidMount() {
-    setInterval(this.tick, 500)
-  }
-
-  tick() {
-    if (this.state.timerIs == 'running') {
-      if (moment().isSameOrAfter(this.state.willStopAt) ) {
-        this.setState({timerIs:'stopped', willStopAt: null})
-      }
-    }
+  notify() {
+    new Notification("Time is up")
   }
 }
