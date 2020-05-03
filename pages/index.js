@@ -77,7 +77,7 @@ function DurationClock({ duration }) {
   const min = duration.minutes().toString().padStart(2, '0')
   const sec = duration.seconds().toString().padStart(2, '0')
   return (
-    <div className="h1" style={{ fontFamily: 'monospace' }}>
+    <div className="h1 text-monospace">
       {min}:{sec}
     </div>
   )
