@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import moment from 'moment'
-import { Container, Button } from 'react-bootstrap'
+import moment from 'moment/moment'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const DURATION = 3 * 1000
@@ -12,6 +12,38 @@ export default class Page extends React.Component {
     this.onStart = this.onStart.bind(this)
     this.tick = this.tick.bind(this)
     this.notify = this.notify.bind(this)
+  }
+
+  render() {
+    const disabled = this.state.timerIs != 'stopped'
+    let remaining = moment.duration(0)
+    if (this.state.willStopAt) {
+      remaining = this.state.willStopAt.clone().subtract(moment())
+    }
+
+    return (
+      <div className="container">
+        <Head>
+          <title>Tomatimer</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Container fluid style={{ marginTop: '1rem' }}>
+          <Row>
+            <Col>
+              <DurationClock duration={remaining} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button variant="primary" disabled={disabled}
+                onClick={this.onStart} >
+                Start
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    )
   }
 
   componentDidMount() {
@@ -27,34 +59,26 @@ export default class Page extends React.Component {
           () => { this.notify() }
         )
       }
+      this.forceUpdate()
     }
   }
 
-  render() {
-    console.log("state: ", this.state)
-    const disabled = this.state.timerIs != 'stopped'
-
-    return (
-      <div className="container">
-        <Head>
-          <title>Tomatimer</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <Container style={{ marginTop: '1rem' }}>
-          <Button variant="primary" onClick={this.onStart} disabled={disabled}>
-            Start
-          </Button>
-        </Container>
-      </div>
-    )
-  }
-
   onStart() {
-    const willStopAt = moment() + moment.duration(DURATION)
-    this.setState({ timerIs: 'running', willStopAt: willStopAt })
+    const willStopAt = moment().add(moment.duration(DURATION))
+    this.setState({ timerIs: 'running', willStopAt: willStopAt.clone() })
   }
 
   notify() {
     new Notification("Time is up")
   }
+}
+
+function DurationClock({ duration }) {
+  const min = duration.minutes().toString().padStart(2, '0')
+  const sec = duration.seconds().toString().padStart(2, '0')
+  return (
+    <div className="h1" style={{ fontFamily: 'monospace' }}>
+      {min}:{sec}
+    </div>
+  )
 }
