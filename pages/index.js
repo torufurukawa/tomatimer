@@ -180,7 +180,8 @@ class Settings extends React.Component {
   }
 
   onOk() {
-    const duration = moment.duration(this.state.min + ':' + this.state.sec)
+    const durationStr = '00:' + this.state.min + ':' + this.state.sec
+    const duration = moment.duration(durationStr)
     this.submit(duration)
   }
 }
