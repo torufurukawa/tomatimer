@@ -1,29 +1,20 @@
 {
+  "name": "tomatimer",
+  "version": "0.1.0",
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
-  "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
-  "main": "app/background.js",
   "scripts": {
-    "dev": "nextron",
-    "build": "nextron build",
-    "postinstall": "electron-builder install-app-deps"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "@material-ui/core": "^4.9.5",
-    "@openfonts/space-mono_all": "^1.44.0",
-    "electron-serve": "^0.4.1",
-    "electron-store": "^5.1.0",
-    "moment": "^2.24.0",
-    "typeface-roboto": "0.0.75"
-  },
-  "devDependencies": {
-    "electron": "^7.1.9",
-    "electron-builder": "^22.2.0",
-    "next": "^9.1.7",
-    "nextron": "^5.14.4",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "@zeit/next-css": "^1.0.1",
+    "bootstrap": "^4.4.1",
+    "moment": "^2.25.1",
+    "momentjs": "^2.0.0",
+    "next": "9.3.6",
+    "react": "16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "16.13.1"
   }
 }
