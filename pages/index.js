@@ -64,26 +64,26 @@ export default class Page extends React.Component {
       const now = moment()
       const remaining = moment.duration(timeLimit.subtract(now).min(0))
       const state = { remaining: remaining }
+
+      // When time is up...
       if (remaining.as('seconds') == 0) {
         state.timerIs = 'stopped'
         state.willStopAt = null
-        this.notify()
+        state.remaining = moment.duration(DURATION)
+        new Notification("Time is up")
       }
+
       this.setState(state)
     }
   }
 
   onStart() {
-    const willStopAt = moment().add(moment.duration(DURATION))
+    const willStopAt = moment().add(this.state.remaining)
     this.setState({ timerIs: 'running', willStopAt: willStopAt })
   }
 
   onPause() {
     this.setState({ timerIs: 'paused' })
-  }
-
-  notify() {
-    new Notification("Time is up")
   }
 }
 
