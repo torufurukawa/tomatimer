@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import moment from 'moment/moment'
-import { Container, Row, Col, Button, InputGroup, FormControl } from 'react-bootstrap'
+import { Container, Row, Col, Button, InputGroup, FormControl, Form } from 'react-bootstrap'
 
 
 const DURATION = 3 * 1000
@@ -143,44 +143,46 @@ class Settings extends React.Component {
     }
     this.onMinutesChange = this.onMinutesChange.bind(this)
     this.onSecondsChange = this.onSecondsChange.bind(this)
-    this.onOk = this.onOk.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
     this.submit = props.onSubmit
     this.cancel = props.onCancel
   }
 
   render() {
-    const isMinInvalid =!(/^[0-5]?[0-9]$/.test(this.state.min))
+    const isMinInvalid = !(/^[0-5]?[0-9]$/.test(this.state.min))
     const isSecInvalid = !(/^[0-5]?[0-9]$/.test(this.state.sec))
     const isSubmittable = ((!isMinInvalid) && (!isSecInvalid))
 
     return (
       <Container fluid style={{ marginTop: '1rem' }}>
-        <Row>
-          <Col>
-            <InputGroup>
-              <FormControl value={this.state.min} isInvalid={isMinInvalid}
-                onChange={this.onMinutesChange} />
-              <div className="input-group-prepend input-group-append">
-                <InputGroup.Text>:</InputGroup.Text>
-              </div>
-              <FormControl value={this.state.sec} isInvalid={isSecInvalid}
-                onChange={this.onSecondsChange} />
-            </InputGroup>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '1rem' }}>
-          <Col xs={10}>
-            <Button variant="primary" onClick={this.onOk}
-              disabled={!isSubmittable} block>
-              OK
+        <Form onSubmit={this.onSubmit}>
+          <Form.Row>
+            <Col>
+              <InputGroup>
+                <FormControl value={this.state.min} isInvalid={isMinInvalid}
+                  onChange={this.onMinutesChange} />
+                <div className="input-group-prepend input-group-append">
+                  <InputGroup.Text>:</InputGroup.Text>
+                </div>
+                <FormControl value={this.state.sec} isInvalid={isSecInvalid}
+                  onChange={this.onSecondsChange} />
+              </InputGroup>
+            </Col>
+          </Form.Row>
+          <Form.Row style={{ marginTop: '1rem' }}>
+            <Col xs={10}>
+              <Button variant="primary" onClick={this.onSubmit}
+                disabled={!isSubmittable} type="submit" block>
+                OK
             </Button>
-          </Col>
-          <Col xs={2}>
-            <Button variant="secondary" onClick={this.cancel} block>
-              Cancel
+            </Col>
+            <Col xs={2}>
+              <Button variant="secondary" onClick={this.cancel} block>
+                Cancel
             </Button>
-          </Col>
-        </Row>
+            </Col>
+          </Form.Row>
+        </Form>
       </Container>
     )
   }
@@ -193,7 +195,7 @@ class Settings extends React.Component {
     this.setState({ sec: event.target.value })
   }
 
-  onOk() {
+  onSubmit() {
     const durationStr = '00:' + this.state.min + ':' + this.state.sec
     const duration = moment.duration(durationStr)
     this.submit(duration)
