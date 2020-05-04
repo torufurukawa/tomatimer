@@ -12,7 +12,7 @@ export default class Page extends React.Component {
       timerIs: 'stopped',
       willStopAt: null,
       remaining: moment.duration(DURATION),
-      isSetting: true,
+      isSetting: false,
       duration: moment.duration(DURATION),
     }
     this.onStart = this.onStart.bind(this)
