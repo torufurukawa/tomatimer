@@ -22,8 +22,6 @@ export default class Page extends React.Component {
   }
 
   render() {
-    const startable = this.state.timerIs != 'running'
-    const pausable = this.state.timerIs == 'running'
     let Content
     if (this.state.isSetting) {
       Content = <Settings
@@ -32,8 +30,8 @@ export default class Page extends React.Component {
         onCancel={() => { this.setState({ isSetting: false }) }} />
     } else {
       Content = <Display
+        timerIs={this.state.timerIs}
         remaining={this.state.remaining}
-        startable={startable} pausable={pausable}
         onStart={this.onStart} onPause={this.onPause}
         onSetting={() => { this.setState({ isSetting: true }) }} />
     }
@@ -91,27 +89,34 @@ export default class Page extends React.Component {
   }
 }
 
-function Display({ remaining, startable, pausable, onStart, onPause,
-  onSetting }) {
+function Display({ remaining, onStart, onPause, onSetting, timerIs }) {
+  const onClockClick = (timerIs == 'running') ? () => { } : onSetting
+
+  let onButtonClick
+  let buttonLabel
+  if (timerIs == 'stopped') {
+    onButtonClick = onStart
+    buttonLabel = 'Start'
+  } else if (timerIs == 'running') {
+    onButtonClick = onPause
+    buttonLabel = 'Pause'
+  } else if (timerIs == 'paused') {
+    onButtonClick = onStart
+    buttonLabel = 'Resume'
+  }
+
   return (
     <Container fluid style={{ marginTop: '1rem' }}>
       <Row>
         <Col>
-          <DurationClock duration={remaining} onClick={onSetting} />
+          <DurationClock duration={remaining} onClick={onClockClick} />
         </Col>
       </Row>
       <Row>
-        <Col>
-          <Button variant="primary" disabled={!startable}
-            onClick={onStart}>
-            Start
-        </Button>
-        </Col>
-        <Col>
-          <Button variant="secondary" disabled={!pausable}
-            onClick={onPause}>
-            Pause
-        </Button>
+        <Col xs={{ offset: 2, span: 8 }}>
+          <Button block size="lg" variant="secondary" onClick={onButtonClick}>
+            {buttonLabel}
+          </Button>
         </Col>
       </Row>
     </Container>
@@ -122,7 +127,7 @@ function DurationClock({ duration, onClick }) {
   const min = duration.minutes().toString().padStart(2, '0')
   const sec = duration.seconds().toString().padStart(2, '0')
   return (
-    <div className="h1 text-monospace" onClick={onClick}>
+    <div className="display-1 text-monospace text-center" onClick={onClick}>
       {min}:{sec}
     </div>
   )
