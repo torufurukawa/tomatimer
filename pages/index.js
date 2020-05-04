@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import moment from 'moment/moment'
 import { Container, Row, Col, Button, InputGroup, FormControl } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
+
 
 const DURATION = 3 * 1000
 
