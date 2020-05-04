@@ -12,7 +12,7 @@ export default class Page extends React.Component {
       timerIs: 'stopped',
       willStopAt: null,
       remaining: moment.duration(DURATION),
-      isSetting: false,
+      isSetting: true,
       duration: moment.duration(DURATION),
     }
     this.onStart = this.onStart.bind(this)
@@ -149,27 +149,36 @@ class Settings extends React.Component {
   }
 
   render() {
+    const isMinInvalid =!(/^[0-5]?[0-9]$/.test(this.state.min))
+    const isSecInvalid = !(/^[0-5]?[0-9]$/.test(this.state.sec))
+    const isSubmittable = ((!isMinInvalid) && (!isSecInvalid))
+
     return (
       <Container fluid style={{ marginTop: '1rem' }}>
         <Row>
           <Col>
             <InputGroup>
-              <FormControl value={this.state.min}
+              <FormControl value={this.state.min} isInvalid={isMinInvalid}
                 onChange={this.onMinutesChange} />
               <div className="input-group-prepend input-group-append">
                 <InputGroup.Text>:</InputGroup.Text>
               </div>
-              <FormControl value={this.state.sec}
+              <FormControl value={this.state.sec} isInvalid={isSecInvalid}
                 onChange={this.onSecondsChange} />
             </InputGroup>
           </Col>
         </Row>
         <Row style={{ marginTop: '1rem' }}>
-          <Col>
-            <Button variant="primary" onClick={this.onOk}>OK</Button>
+          <Col xs={10}>
+            <Button variant="primary" onClick={this.onOk}
+              disabled={!isSubmittable} block>
+              OK
+            </Button>
           </Col>
-          <Col>
-            <Button variant="secondary" onClick={this.cancel}>Cancel</Button>
+          <Col xs={2}>
+            <Button variant="secondary" onClick={this.cancel} block>
+              Cancel
+            </Button>
           </Col>
         </Row>
       </Container>
